@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monolith - 3D Architecture Explorer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 0; min-height: 100vh; overflow: hidden; background: var(--bg-color); }
+        .back-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            color: var(--accent-color);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            border: 2px solid var(--accent-color);
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        .back-link:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+        .deck-explorer { border: none !important; }
+        .explorer-container { height: 100vh; width: 100vw; overflow: hidden; }
+        .sidebar { display: none; }
+        .main-content { grid-column: 1 / -1 !important; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">RETURN TO PRESENTATION</a>
+    <!-- Interactive 3D Explorer Deck -->
+    <div class="deck-explorer grid-container" style="border-top: 1px solid var(--border-color);">
+        <!-- Main Content Area -->
+        <div class="main-content" style="grid-column: 2 / span 2; padding: 0;">
+            <div class="explorer-container">
+                
+                <div class="explorer-controls">
+                    <button class="btn-explode" id="explodeBtn" onclick="toggleExplode()">[ ASSEMBLE VIEW ]</button>
+                    
+                    <div style="margin-top: 20px;">
+                        <label class="mono-text-small" style="display:block; margin-bottom:5px;">ROTATION X-AXIS</label>
+                        <input type="range" id="rotX" min="0" max="90" value="60" oninput="updateRotation()" style="width: 150px;">
+                    </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <label class="mono-text-small" style="display:block; margin-bottom:5px;">ROTATION Z-AXIS</label>
+                        <input type="range" id="rotZ" min="-180" max="180" value="-45" oninput="updateRotation()" style="width: 150px;">
+                    </div>
+                    
+                    <p class="mono-text-small" style="margin-top: 15px; color: #666;">DRAG TO ROTATE<br>CLICK LAYERS TO INSPECT</p>
+                </div>
+
+                <div class="explorer-info" id="explorerInfo" style="pointer-events: none;">
+                    <div class="info-title">MN1 Architecture</div>
+                    <div class="info-desc">Click on any layer in the exploded view to inspect the internal architecture of the Monolith Inference Processing Unit.</div>
+                </div>
+
+                <div class="scene exploded" id="scene3d">
+                    
+                    <div class="v-layer layer-1" onclick="showInfo('Optical I/O Hub', 'Massive bandwidth ingestion. Photonic interconnects allowing continuous multi-modal data streaming.')">
+                        <div class="layer-annotation">I/O HUB</div>
+                        <div class="face top"><div style="position:absolute; width:80px; height:80px; background:#1a1a1a; right:20px; top:20px;"></div></div>
+                        <div class="face bottom"></div><div class="face front"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div>
+                    </div>
+                    
+                    <div class="v-layer layer-2" onclick="showInfo('Analog Logic Cores (AIMC)', 'The inference engine. Continuous-time analog crossbar arrays that perform instantaneous matrix-vector multiplication.')">
+                        <div class="layer-annotation">AIMC CORES</div>
+                        <div class="face top">
+                            <div class="core-grid">
+                                <div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div><div class="core-block">CORE</div>
+                            </div>
+                        </div>
+                        <div class="face bottom"></div><div class="face front"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div>
+                    </div>
+                    
+                    <div class="v-layer layer-3" onclick="showInfo('Ternary SRAM Fabric', 'Replaces HBM entirely. High-density, low-latency embedded memory holding 1.58-bit quantized parameters.')">
+                        <div class="layer-annotation">SRAM FABRIC</div>
+                        <div class="face top"></div><div class="face bottom"></div><div class="face front"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div>
+                    </div>
+                    
+                    <div class="v-layer layer-4" onclick="showInfo('Micro-Fluidic Manifold', 'Thermal extraction layer. Liquid coolant is pumped directly through the silicon channels to dissipate the 400W TDP.')">
+                        <div class="layer-annotation">COOLING MANIFOLD</div>
+                        <div class="face top"></div><div class="face bottom"></div><div class="face front"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div>
+                    </div>
+                    
+                    <div class="v-layer layer-5" onclick="showInfo('Silicon Logic Substrate', 'The foundational N3E TSMC logic die containing the power delivery network and Through-Silicon Vias (TSV).')">
+                        <div class="layer-annotation">LOGIC SUBSTRATE</div>
+                        <div class="face top"></div><div class="face bottom"></div><div class="face front"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div>
+                    </div>
+                    
+                    <div class="v-layer layer-6" onclick="showInfo('BGA Substrate', 'Ball Grid Array pins connecting the MN1 chip to the motherboard of the Inference Computer node.')">
+                        <div class="layer-annotation">BGA PINS</div>
+                        <div class="face top"></div><div class="face bottom bga"></div><div class="face front"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="explorer.js"></script>
+</body>
+</html>

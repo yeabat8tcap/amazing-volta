@@ -1,0 +1,11 @@
+node_modules/
+*.txt
+add_missing_decks.js
+extract.js
+fix_deck.js
+redraw_circuit.js
+refine_3d.js
+restore.js
+screenshot.js
+separate_3d.js
+update_3d.js
