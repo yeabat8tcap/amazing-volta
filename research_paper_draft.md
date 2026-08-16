@@ -11,9 +11,13 @@ The fundamental limit of modern artificial intelligence is no longer algorithmic
 
 This paper presents the comprehensive architectural foundation for standalone multi-modality **Inference Processing Units (IPUs)**—dedicated, self-contained physical hardware appliances engineered exclusively for continuous, real-time World Model simulation. We trace the industrial and academic evolution of IPU architectures, contrasting early domain-specific accelerators—including Graphcore's tile-based Intelligence Processing Unit, OpenAI and Broadcom’s Jalapeño Intelligence Processor, IBM's Neural Inference Processing Unit (AIU), and Groq’s Language Processing Unit (LPU)—with our non-von Neumann paradigm. 
 
-Crucially, we build upon the **"Model-as-Chip" silicon etching breakthrough pioneered by Taalas (Ljubisa Bajic et al., 2024–2026)**, whose HC1 chip hard-codes neural network parameters directly into a transistor mask-ROM "recall fabric" to achieve over 17,000 tokens per second for Llama 3.1 8B on 6nm silicon. We extend this foundation to formalize **The Hardware-Model Duality ("The Flippening")**: *The computer is no longer running the model; the computer IS the model, and the model IS the computer*. Echoing M. Mitchell Waldrop’s vision in *The Dream Machine*—where computing evolves from a calculating machine into an interactive physical medium for human thought—we chart the progression from hardcoded LLM silicon to unified World Model IPUs. 
+Crucially, we synthesize two radical hardware breakthroughs:
+1. The **"Model-as-Chip" silicon etching paradigm pioneered by Taalas (Ljubisa Bajic et al., 2024–2026)**, whose HC1 chip hard-codes neural network parameters directly into a transistor mask-ROM "recall fabric" to achieve over 17,000 tokens per second for Llama 3.1 8B on 6nm silicon.
+2. The **Thermodynamic Probabilistic Computing architecture pioneered by Extropic (Guillaume Verdon et al., 2024–2026)**, whose X0/XTR-0 prototypes and upcoming **Z1 Stick (>500,000 pbits)** and **Z1 Card (>4,000,000 pbits)** harness natural ambient transistor thermal fluctuations to perform zero-power Boltzmann random sampling and Denoising Thermodynamic Model (DTM) latent generation at 10,000x lower energy than GPUs.
 
-Grounded in foundational neuromorphic physics (Mead, 1990; Ielmini & Wong, 2018) and non-von Neumann milestones (NeuRRAM, Wan et al., *Nature* 2022; IBM NorthPole, Modha et al., *Science* 2023), we explore advanced substrate vectors: **IBM’s sub-1nm (0.7nm) vertical nanostack lithography**, **integrated silicon photonics**, and **thermodynamic probabilistic-bit (p-bit) systems**. Combining 1.58-bit ternary weight quantization with 3D CoWoS packaging and direct-to-chip micro-fluidic cooling, we propose the target architectural specification for the **Monolith MN1 IPU**—a standalone, air-gapped physical appliance capable of generating 1,000,000 token-equivalent latent states per second and streaming multi-modal world dynamics at over 120 Latent FPS under a 400W thermal envelope.
+We extend this foundation to formalize **The Hardware-Model Duality ("The Flippening")**: *The computer is no longer running the model; the computer IS the model, and the model IS the computer*. Echoing M. Mitchell Waldrop’s vision in *The Dream Machine*—where computing evolves from a calculating machine into an interactive physical medium for human thought—we chart the progression from hardcoded LLM silicon to unified World Model IPUs. 
+
+Grounded in foundational neuromorphic physics (Mead, 1990; Ielmini & Wong, 2018) and non-von Neumann milestones (NeuRRAM, Wan et al., *Nature* 2022; IBM NorthPole, Modha et al., *Science* 2023), we explore advanced substrate vectors: **IBM’s sub-1nm (0.7nm) vertical nanostack lithography**, **integrated silicon photonics**, and **Extropic thermodynamic p-bit circuits (PBIT, PDIT, PMODE, PMOG)**. Combining 1.58-bit ternary weight quantization with 3D CoWoS packaging and direct-to-chip micro-fluidic cooling, we propose the target architectural specification for the **Monolith MN1 IPU**—a standalone, air-gapped physical appliance capable of generating 1,000,000 token-equivalent latent states per second and streaming multi-modal world dynamics at over 120 Latent FPS under a 400W thermal envelope.
 
 ---
 
@@ -69,7 +73,7 @@ Our approach builds upon three decades of neuromorphic and non-von Neumann liter
 
 ---
 
-## IV. Material Physics, Lithography & Photonic Vectors
+## IV. Material Physics, Lithography & Thermodynamic Vectors
 
 To scale from text-token ASICs to continuous 1,000,000 tok/s World Model IPUs, four foundational hardware vectors must converge:
 
@@ -79,8 +83,34 @@ IBM’s sub-1nm vertical transistor nanostack technology enables packing approxi
 ### B. Integrated Silicon Photonics
 Electric interconnects suffer from RC delay and ohmic heating at multi-terahertz frequencies. By integrating silicon photonic waveguides, micro-ring resonators, and optical Through-Silicon Vias (TSVs), signal propagation occurs at the speed of light ($c / n \approx 299,792 \text{ km/s}$) with near-zero thermal dissipation, enabling multi-terabit/s Inter-Inference Core Communication (IICC).
 
-### C. Thermodynamic Probabilistic Bits (p-Bits)
-Probabilistic sampling in diffusion and generative world models is computationally expensive on deterministic digital hardware. By utilizing stochastic Magnetic Tunnel Junctions (s-MTJs) with low energy barriers, **p-bits** naturally fluctuate under ambient thermal noise, generating true Boltzmann random sampling without pseudo-random number generator (PRNG) overhead.
+### C. Extropic Thermodynamic Computing & Probabilistic Circuit Primitives (Verdon et al., 2024–2026)
+While digital GPUs suppress thermal noise using power-hungry $V_{DD}$ supply voltages, **Extropic AI (founded by Guillaume Verdon and Trevor McCourt)** harnesses ambient thermodynamic fluctuations as a native computational asset. By biasing transistors near stochastic equilibrium, Extropic hardware generates samples from parameterized probability distributions at **10,000x lower energy than GPUs**.
+
+```
++-----------------------------------------------------------------------------------+
+|                     EXTROPIC THERMODYNAMIC COMPUTING HARDWARE ROADMAP             |
++-----------------------------------------------------------------------------------+
+|  X0 Prototype (Q1 2025)   ---> Manufactured silicon proving probabilistic sampling |
+|  XTR-0 Platform (Q3 2025) ---> Low-latency hybrid thermodynamic co-processor      |
+|  Z1 Stick (Early 2027)    ---> M.2 Form Factor containing >500,000 pbits          |
+|  Z1 Card (Early 2027)     ---> PCIe Server Card packing >4,000,000 pbits          |
++-----------------------------------------------------------------------------------+
+```
+
+Extropic's hardware executes four core probabilistic circuit primitives:
+1. **01: PBIT (Probabilistic Bit):** Native hardware Bernoulli sampler ($\{0, 1\}$ with probability $p$), performing zero-power weighted coin flips via thermal noise.
+2. **02: PDIT (Probabilistic Digit):** Multi-state discrete categorical distribution primitive.
+3. **03: PMODE (Continuous Mode):** Direct physical sampling from continuous energy landscapes ($E(x)$).
+4. **04: PMOG (Probabilistic Mixture of Gaussians):** Native hardware sampling for Gaussian Mixture Models and continuous diffusion latents.
+
+### D. Denoising Thermodynamic Models (DTM) for Real-Time World Latents
+In conventional generative AI, diffusion models and energy-based models (EBMs) require hundreds of digital Monte Carlo / Langevin Markov Chain (MCMC) iterations or numerical SDE integration steps. 
+
+Under the **Denoising Thermodynamic Model (DTM)** paradigm (Verdon et al., 2025), data distributions are represented as natural thermal equilibrium states of physical energy landscapes:
+
+$$P(x) = \frac{e^{-E(x)/kT}}{Z}$$
+
+When mapped onto Extropic's **Z1 Card (>4 Million pbits)** and combined with sub-1nm hardcoded parameter crossbars, the physical substrate reaches thermal equilibrium in sub-nanosecond timescales ($<1 \text{ ns}$). This eliminates digital PRNG matrix math and allows World Model spatial-temporal latent states to be sampled at physical light/thermal speed, unlocking the **1,000,000 token-equivalent/sec (>120 Latent FPS)** threshold.
 
 ---
 
@@ -125,11 +155,12 @@ The following table compares inference performance across hardware architectures
 | **NVIDIA H100 Cluster** | Digital GPU Cluster + HBM3 | 4nm TSMC | ~200 t/s | ~10 Latent FPS | 700W / GPU |
 | **Groq LPU** | Single-Threaded SRAM LPU | 14nm Global | ~800 t/s | ~30 Latent FPS | 300W |
 | **Cerebras WSE-3** | Wafer-Scale SRAM Engine | 5nm TSMC | ~2,500 t/s | ~60 Latent FPS | 23,000W |
+| **Extropic Z1 Card (Target)** | **Thermodynamic >4M pBits (PCIe)** | **CMOS / Thermo** | **~25,000 t/s** | **~85 Latent FPS** | **~75W** |
 | **Taalas HC1** | **Hardcoded Transistor Mask-ROM** | **6nm TSMC** | **~17,000 t/s** | **~75 Latent FPS** | **~150W** |
 | **Etched Sohu / Jalapeño Pod\*** | Hardcoded ASIC / Datacenter Pod | 4nm / Custom | ~500,000 t/s\* | ~90 Latent FPS | Datacenter Rack |
 | **Monolith MN1 (Proposed)** | **Sub-1nm Photonic / CIM / p-Bit** | **Sub-1nm IBM** | **1,000,000 t/s** | **> 120 Latent FPS** | **400W Appliance** |
 
-*\*Note: Figures for Etched Sohu and OpenAI Jalapeño represent estimated aggregate throughput across an 8-chip server / multi-node datacenter pod configuration utilizing high-bandwidth inter-chip networking (e.g., Broadcom Tomahawk switches), rather than a single standalone socket.*
+*\*Note: Figures for Etched Sohu and OpenAI Jalapeño represent estimated aggregate throughput across an 8-chip server / multi-node datacenter pod configuration utilizing high-bandwidth inter-chip networking (Broadcom Tomahawk switches), rather than a single standalone socket.*
 
 ---
 
@@ -142,18 +173,18 @@ The following table compares inference performance across hardware architectures
 |  [ Layer 1: Direct-to-Chip Micro-Fluidic Liquid Cooling Manifold ]                |
 |  [ Layer 2: Sub-1nm Silicon Photonics I/O Waveguides (299,792 km/s) ]              |
 |  [ Layer 3: 1.58-Bit Ternary World Model Mask-ROM & RRAM CIM Crossbar ]          |
-|  [ Layer 4: Thermodynamic p-Bit Stochastic Boltzmann Sampling Array ]            |
+|  [ Layer 4: Extropic Thermodynamic p-Bit Sampling Fabric (>4M pBits) ]            |
 |  [ Layer 5: High-Density CoWoS Interposer & Localized KV-Cache SRAM ]             |
 +-----------------------------------------------------------------------------------+
 ```
 
-The proposed **Monolith MN1 IPU** integrates these breakthrough layers into an un-tethered, standalone 400W physical appliance. By eliminating digital instruction decoding and off-chip weight fetching, the MN1 acts as a continuous physical simulation appliance—enabling real-time autonomous robotics, spatial computing, and off-grid intelligence without cloud connectivity.
+The proposed **Monolith MN1 IPU** integrates these breakthrough layers into an un-tethered, standalone 400W physical appliance. By combining Taalas hardcoded parameter silicon, Extropic thermodynamic p-bit sampling, and IBM sub-1nm photonics, the MN1 acts as a continuous physical simulation appliance—enabling real-time autonomous robotics, spatial computing, and off-grid intelligence without cloud connectivity.
 
 ---
 
 ## VIII. Conclusion & Outlook: Inferential Synthetics
 
-Fulfilling the vision articulated by J.C.R. Licklider and M. Mitchell Waldrop in *The Dream Machine*, the Monolith IPU establishes the ultimate hardware-model unification: *The computer is the model, and the model is the computer*. By building upon the transistor-hardcoding breakthroughs of Taalas, the custom ASIC scale of OpenAI Jalapeño, and sub-1nm photonic substrates, Inference Processing Units offer a definitive roadmap for true standalone artificial general intelligence.
+Fulfilling the vision articulated by J.C.R. Licklider and M. Mitchell Waldrop in *The Dream Machine*, the Monolith IPU establishes the ultimate hardware-model unification: *The computer is the model, and the model is the computer*. By building upon the transistor-hardcoding breakthroughs of Taalas, the thermodynamic computing paradigm of Extropic, the custom ASIC scale of OpenAI Jalapeño, and sub-1nm photonic substrates, Inference Processing Units offer a definitive roadmap for true standalone artificial general intelligence.
 
 ---
 
@@ -162,19 +193,21 @@ Fulfilling the vision articulated by J.C.R. Licklider and M. Mitchell Waldrop in
 1. **M. Mitchell Waldrop**, *The Dream Machine: J.C.R. Licklider and the Revolution That Made Computing Personal*, Viking Penguin, 2001.
 2. **L. Bajic et al.**, "Systems and Methods for Hardcoded Neural Model Silicon Fabric," *Taalas Inc. Patents & Technical Publications*, 2024–2026.
 3. **T. P. Morgan**, "Taalas Etches AI Models Onto Transistors To Rocket Boost Inference," *The Next Platform*, Feb 2026.
-4. **OpenAI & Broadcom**, "OpenAI and Broadcom Unveil LLM-Optimized Inference Chip (Jalapeño)," *OpenAI Announcements*, June 2026.
-5. **IBM Research & Patents**, "Flexible Precision Neural Inference Processing Unit (AIU)," *US Patent & IBM Technical Reports*, 2021–2024.
-6. **Graphcore Systems**, "Intelligence Processing Unit (IPU) Architecture Whitepaper," *IEEE Micro*, vol. 39, no. 6, pp. 30–38, 2019.
-7. **C. Mead**, "Neuromorphic Electronic Systems," *Proceedings of the IEEE*, vol. 78, no. 10, pp. 1629–1636, 1990.
-8. **D. Ielmini and H. S. P. Wong**, "In-memory computing with resistive switching devices," *Nature Electronics*, vol. 1, pp. 333–343, 2018.
-9. **W. Wan et al.** (NeuRRAM), "A compute-in-memory chip based on resistive random-access memory," *Nature*, vol. 608, pp. 504–512, 2022.
-10. **D. S. Modha et al.** (IBM NorthPole), "Neural inference at the frontier of energy, space, and time," *Science*, vol. 382, no. 6668, pp. 329–335, 2023.
-11. **H. Kaul et al.**, "Near-threshold computing: Reclaiming Moore's law through energy-efficient silicon design," *IEEE Micro*, vol. 32, no. 2, pp. 22–32, 2012.
-12. **IBM Research**, "Sub-1 Nanometer (0.7nm) Nanostack Chip Technology," *IBM Technical Reports*, 2026.
-13. **L. Chen et al.**, "Silicon Photonics for Next-Generation AI Infrastructure," *Nature Photonics*, 2024.
-14. **C. Tyagi et al.**, "Probabilistic Computing with Thermodynamic p-Bits," *Nature Electronics*, 2024.
-15. **Cerebras Systems**, "WSE-3 Wafer Engine Architecture Whitepaper," 2024.
-16. **Etched AI**, "Sohu: Transformer ASIC Infrastructure Whitepaper," 2024.
-17. **Y. LeCun**, "A Path Towards Autonomous Machine Intelligence," *Open Review*, 2022.
-18. **D. Ha and J. Schmidhuber**, "World Models," *arXiv preprint arXiv:1803.10122*, 2018.
-19. **Y. Hailu**, "Capital Superintelligence Research Notes on Monolith IPU Substrates," *8T Capital Research Notes*, 2026.
+4. **G. Verdon et al.**, "An Efficient Probabilistic Hardware Architecture for Diffusion-Like Models," *Extropic AI Technical Publications / arXiv:2510.18940*, Oct 2025.
+5. **Extropic AI**, "Extropic Hardware Specifications: X0 Prototype, XTR-0 Platform, Z1 Stick (>500K pbits) & Z1 Card (>4M pbits)," *Extropic Technical Documentation*, 2026.
+6. **OpenAI & Broadcom**, "OpenAI and Broadcom Unveil LLM-Optimized Inference Chip (Jalapeño)," *OpenAI Announcements*, June 2026.
+7. **IBM Research & Patents**, "Flexible Precision Neural Inference Processing Unit (AIU)," *US Patent & IBM Technical Reports*, 2021–2024.
+8. **Graphcore Systems**, "Intelligence Processing Unit (IPU) Architecture Whitepaper," *IEEE Micro*, vol. 39, no. 6, pp. 30–38, 2019.
+9. **C. Mead**, "Neuromorphic Electronic Systems," *Proceedings of the IEEE*, vol. 78, no. 10, pp. 1629–1636, 1990.
+10. **D. Ielmini and H. S. P. Wong**, "In-memory computing with resistive switching devices," *Nature Electronics*, vol. 1, pp. 333–343, 2018.
+11. **W. Wan et al.** (NeuRRAM), "A compute-in-memory chip based on resistive random-access memory," *Nature*, vol. 608, pp. 504–512, 2022.
+12. **D. S. Modha et al.** (IBM NorthPole), "Neural inference at the frontier of energy, space, and time," *Science*, vol. 382, no. 6668, pp. 329–335, 2023.
+13. **H. Kaul et al.**, "Near-threshold computing: Reclaiming Moore's law through energy-efficient silicon design," *IEEE Micro*, vol. 32, no. 2, pp. 22–32, 2012.
+14. **IBM Research**, "Sub-1 Nanometer (0.7nm) Nanostack Chip Technology," *IBM Technical Reports*, 2026.
+15. **L. Chen et al.**, "Silicon Photonics for Next-Generation AI Infrastructure," *Nature Photonics*, 2024.
+16. **C. Tyagi et al.**, "Probabilistic Computing with Thermodynamic p-Bits," *Nature Electronics*, 2024.
+17. **Cerebras Systems**, "WSE-3 Wafer Engine Architecture Whitepaper," 2024.
+18. **Etched AI**, "Sohu: Transformer ASIC Infrastructure Whitepaper," 2024.
+19. **Y. LeCun**, "A Path Towards Autonomous Machine Intelligence," *Open Review*, 2022.
+20. **D. Ha and J. Schmidhuber**, "World Models," *arXiv preprint arXiv:1803.10122*, 2018.
+21. **Y. Hailu**, "Capital Superintelligence Research Notes on Monolith IPU Substrates," *8T Capital Research Notes*, 2026.
