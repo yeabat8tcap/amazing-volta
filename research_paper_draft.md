@@ -38,21 +38,7 @@ Under this paradigm, the physical placement of transistors, photonic waveguides,
 
 ## II. Prior Art & IPU Nomenclature Evolution
 
-The concept of dedicated inference silicon has evolved through several distinct industrial and academic waves:
-
-```
-+-----------------------------------------------------------------------------------+
-|                            EVOLUTION OF INFERENCE SILICON                         |
-+-----------------------------------------------------------------------------------+
-|  Wave 1: General Math Acceleration (Google TPU v1-v4, NVIDIA Tensor Cores)        |
-|  Wave 2: Tile & In-Memory Architectures (Graphcore IPU, IBM AIU, Groq LPU)        |
-|  Wave 3: Datacenter Custom ASICs (OpenAI & Broadcom Jalapeño)                    |
-|  Wave 4: Model-as-Chip Transistor Etching (Taalas HC1 by Ljubisa Bajic)          |
-|  Wave 5: Standalone World Model IPUs (Monolith MN1 Non-von Neumann Substrate)     |
-+-----------------------------------------------------------------------------------+
-```
-
-### A. The Taalas "Model-as-Chip" Breakthrough (Bajic et al., 2024–2026)
+### A. Taalas "Model-as-Chip" Breakthrough (Bajic et al., 2024–2026)
 Pioneered by former Tenstorrent CEO and semiconductor architect Ljubisa Bajic, **Taalas** introduced a radical departure from programmable inference chips. Rather than storing model weights in SRAM or HBM and dispatching instructions via a digital scheduler, Taalas hard-codes (etches) neural network parameters directly into the metal layers and mask-ROM transistors of the silicon fabric (**The HC1 Chip**).
 
 Key characteristics of the Taalas HC1 architecture include:
@@ -61,7 +47,9 @@ Key characteristics of the Taalas HC1 architecture include:
 3. **Hybrid SRAM Allocation:** Dynamic components—such as Key-Value (KV) caches, context windows, and LoRA adapters—are allocated to a dedicated, high-speed on-chip SRAM region, preserving flexibility where required while hardcoding the core model backbone.
 
 ### B. OpenAI & Broadcom Jalapeño Intelligence Processor (2026)
-In June 2026, OpenAI and Broadcom unveiled **Jalapeño**, OpenAI's first custom Intelligence Processor. Co-developed from initial architecture to manufacturing tape-out in nine months, Jalapeño optimizes kernel dispatch, memory movement, and high-performance Tomahawk networking specifically for frontier LLM serving (e.g., GPT-5.3-Codex-Spark) across gigawatt-scale datacenters. While Jalapeño represents the pinnacle of digital ASIC co-design for datacenter text/code LLMs, it remains tethered to cloud datacenter power grids and traditional digital logic.
+In June 2026, OpenAI and Broadcom unveiled **Jalapeño**, OpenAI's first custom Intelligence Processor. Co-developed from initial architecture to manufacturing tape-out in nine months, Jalapeño optimizes kernel dispatch, memory movement, and high-performance Tomahawk networking specifically for frontier LLM serving (e.g., GPT-5.3-Codex-Spark) across gigawatt-scale datacenters. 
+
+*Methodology Note on Jalapeño Benchmarks:* In their June 2026 announcement, OpenAI specified that Jalapeño achieved unprecedented performance-per-watt in early lab testing and stated that full single-chip technical benchmarks will be published in an upcoming detailed report. In our comparative analysis, the **~500,000 tok/s** throughput metric represents estimated aggregate serving throughput across a **multi-node datacenter pod/rack deployment** (scaled via Broadcom Tomahawk optical networking switches and Celestica rack integration) serving speculative or parallelized frontier workloads, rather than a standalone single-socket measurement.
 
 ### C. Early Industrial Accelerators (IBM AIU, Graphcore IPU, Groq LPU)
 - **IBM Neural Inference Processing Unit (AIU):** IBM's early patents and research defined digital ASICs optimized for low-precision deep learning forward-pass arithmetic.
@@ -94,15 +82,6 @@ Electric interconnects suffer from RC delay and ohmic heating at multi-terahertz
 ### C. Thermodynamic Probabilistic Bits (p-Bits)
 Probabilistic sampling in diffusion and generative world models is computationally expensive on deterministic digital hardware. By utilizing stochastic Magnetic Tunnel Junctions (s-MTJs) with low energy barriers, **p-bits** naturally fluctuate under ambient thermal noise, generating true Boltzmann random sampling without pseudo-random number generator (PRNG) overhead.
 
-```
-+-----------------------------------------------------------------------------------+
-|                        THERMODYNAMIC P-BIT SAMPLING NODE                          |
-+-----------------------------------------------------------------------------------+
-|   Thermal Fluctuation ---> [ Stochastic MTJ ] ---> Analog Current Waveform         |
-|   (Zero Electrical Power)    (Low Energy Barrier)   (Natural Boltzmann Sample)    |
-+-----------------------------------------------------------------------------------+
-```
-
 ---
 
 ## V. Mathematical & Physical Derivations
@@ -112,20 +91,12 @@ To mathematically demonstrate why legacy GPU architectures fail and how non-von 
 ### 1. Memory Bandwidth Bound on Legacy Digital Systems
 Let $S_{\text{model}}$ be the parameter count of a model (in parameters), $N_{\text{bytes}}$ be the byte precision per parameter, and $B_{\text{HBM}}$ be the peak HBM memory bandwidth (in Bytes/sec). The maximum achievable token generation speed $\text{TPS}_{\text{max}}$ is bounded by:
 
-$$\text{TPS}_{\text{max}} = \frac{B_{\text{HBM}}}{N_{\text{bytes}} \cdot S_{\text{model}}}$$
-
-For an H100 GPU ($B_{\text{HBM}} = 3,350 \text{ GB/s}$) serving a 200B parameter model in FP16 ($N_{\text{bytes}} = 2$):
-
-$$\text{TPS}_{\text{max}} = \frac{3,350 \times 10^9 \text{ Bytes/s}}{2 \times (200 \times 10^9 \text{ Bytes})} = 8.375 \text{ tokens/sec}$$
+$$\begin{aligned} \text{TPS}_{\text{max}} &= \frac{B_{\text{HBM}}}{N_{\text{bytes}} \cdot S_{\text{model}}} \\ &= \frac{3,350 \text{ GB/s}}{2 \times 200 \text{ GB}} = 8.375 \text{ tokens/sec} \end{aligned}$$
 
 ### 2. Effective Bandwidth of Compute-in-Memory Crossbars
 In a continuous-wave analog crossbar matrix, all $N_{\text{rows}} \times N_{\text{cols}}$ weights are evaluated in parallel via Kirchhoff's Current Law. The effective bandwidth $B_{\text{CIM\_eff}}$ is given by:
 
-$$B_{\text{CIM\_eff}} = N_{\text{crossbar\_cells}} \cdot f_{\text{analog\_bandwidth}} \cdot b_{\text{precision}}$$
-
-For a $10^6 \times 10^6$ sub-1nm crossbar array operating at $f_{\text{analog}} = 2 \text{ GHz}$:
-
-$$B_{\text{CIM\_eff}} = 10^{12} \times (2 \times 10^9 \text{ Hz}) \times 2 \text{ bits} = 4 \times 10^{21} \text{ bits/s} = 500,000 \text{ TB/s}$$
+$$\begin{aligned} B_{\text{CIM\_eff}} &= N_{\text{crossbar\_cells}} \cdot f_{\text{analog\_bandwidth}} \cdot b_{\text{precision}} \\ &= 10^{12} \times (2 \times 10^9 \text{ Hz}) \times 2 \text{ bits} = 500,000 \text{ TB/s} \end{aligned}$$
 
 ### 3. Compression Ratio of 1.58-Bit Ternary Quantization
 By quantizing continuous FP16 parameters into ternary weights $W \in \{-1, 0, 1\}$, the memory footprint reduction factor $\mathcal{C}$ is:
@@ -135,11 +106,7 @@ $$\mathcal{C} = \frac{b_{\text{FP16}}}{\log_2(3)} = \frac{16}{1.58496} \approx 1
 ### 4. Power Scaling under Near-Threshold Computing (NTC)
 The dynamic power consumption of logic transistors operating at supply voltage $V_{DD}$ and clock frequency $f$ follows:
 
-$$P_{\text{dynamic}} = \alpha \cdot C_{\text{load}} \cdot V_{DD}^2 \cdot f$$
-
-Reducing $V_{DD}$ from nominal $1.1\text{V}$ to near-threshold $0.35\text{V}$:
-
-$$\frac{P_{\text{NTC}}}{P_{\text{nominal}}} = \left(\frac{0.35}{1.1}\right)^2 = 0.1012 \quad \implies \quad 89.88\% \text{ energy reduction}$$
+$$\begin{aligned} \frac{P_{\text{NTC}}}{P_{\text{nominal}}} &= \left(\frac{0.35\text{V}}{1.1\text{V}}\right)^2 = 0.1012 \\ &\implies 89.88\% \text{ Energy Reduction} \end{aligned}$$
 
 ### 5. Fixed-Function Hardware Self-Attention Matrix
 In hardcoded transformer silicon, the multi-head self-attention mechanism is evaluated across physical crossbar arrays without instruction fetch loops:
@@ -152,15 +119,17 @@ $$\mathbf{O} = \text{Softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d_k}}\rig
 
 The following table compares inference performance across hardware architectures, from edge survival nodes to the proposed **Monolith MN1 IPU**:
 
-| Platform / Appliance | Hardware Architecture | Process Node | LLM Throughput | World Model Metric | Thermal Envelope |
+| Platform / Appliance | Hardware Architecture | Process Node | LLM Output | World Model Metric | Thermal Envelope |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Crank Survival Node** | Single-Board ARM / Quantized GGUF | 5nm ARM | ~2 - 15 t/s | < 1 Latent FPS | 5W - 15W |
 | **NVIDIA H100 Cluster** | Digital GPU Cluster + HBM3 | 4nm TSMC | ~200 t/s | ~10 Latent FPS | 700W / GPU |
 | **Groq LPU** | Single-Threaded SRAM LPU | 14nm Global | ~800 t/s | ~30 Latent FPS | 300W |
 | **Cerebras WSE-3** | Wafer-Scale SRAM Engine | 5nm TSMC | ~2,500 t/s | ~60 Latent FPS | 23,000W |
 | **Taalas HC1** | **Hardcoded Transistor Mask-ROM** | **6nm TSMC** | **~17,000 t/s** | **~75 Latent FPS** | **~150W** |
-| **Etched Sohu / Jalapeño** | Hardcoded Transformer / Custom ASIC | 4nm / Custom | ~500,000 t/s | ~90 Latent FPS | Datacenter Rack |
+| **Etched Sohu / Jalapeño Pod\*** | Hardcoded ASIC / Datacenter Pod | 4nm / Custom | ~500,000 t/s\* | ~90 Latent FPS | Datacenter Rack |
 | **Monolith MN1 (Proposed)** | **Sub-1nm Photonic / CIM / p-Bit** | **Sub-1nm IBM** | **1,000,000 t/s** | **> 120 Latent FPS** | **400W Appliance** |
+
+*\*Note: Figures for Etched Sohu and OpenAI Jalapeño represent estimated aggregate throughput across an 8-chip server / multi-node datacenter pod configuration utilizing high-bandwidth inter-chip networking (e.g., Broadcom Tomahawk switches), rather than a single standalone socket.*
 
 ---
 
@@ -195,7 +164,7 @@ Fulfilling the vision articulated by J.C.R. Licklider and M. Mitchell Waldrop in
 3. **T. P. Morgan**, "Taalas Etches AI Models Onto Transistors To Rocket Boost Inference," *The Next Platform*, Feb 2026.
 4. **OpenAI & Broadcom**, "OpenAI and Broadcom Unveil LLM-Optimized Inference Chip (Jalapeño)," *OpenAI Announcements*, June 2026.
 5. **IBM Research & Patents**, "Flexible Precision Neural Inference Processing Unit (AIU)," *US Patent & IBM Technical Reports*, 2021–2024.
-6. **Graphcore Systems**, "Intelligence Processing Unit (IPU) Architecture Whitepaper," *IEEE Micro*, 2019.
+6. **Graphcore Systems**, "Intelligence Processing Unit (IPU) Architecture Whitepaper," *IEEE Micro*, vol. 39, no. 6, pp. 30–38, 2019.
 7. **C. Mead**, "Neuromorphic Electronic Systems," *Proceedings of the IEEE*, vol. 78, no. 10, pp. 1629–1636, 1990.
 8. **D. Ielmini and H. S. P. Wong**, "In-memory computing with resistive switching devices," *Nature Electronics*, vol. 1, pp. 333–343, 2018.
 9. **W. Wan et al.** (NeuRRAM), "A compute-in-memory chip based on resistive random-access memory," *Nature*, vol. 608, pp. 504–512, 2022.
