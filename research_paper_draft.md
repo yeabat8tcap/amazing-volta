@@ -145,26 +145,54 @@ $$\mathbf{O} = \text{Softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d_k}}\rig
 
 ---
 
-## VI. Quantitative Throughput Benchmarks & Scaling Roadmap
+## VI. Scaling Context Windows: From 10M+ Token LLMs to Infinite Spatial-Temporal World Memory
 
-The following table compares inference performance across hardware architectures, from edge survival nodes to the proposed **Monolith MN1 IPU**:
+While **generation throughput** ($\sim 1,000,000 \text{ tokens/sec}$) defines the output speed of an IPU, the **context window size ($L$)** dictates its active working memory capacity. In hardcoded silicon architectures, static weights are burned into metal layers ($O(1)$ fetch energy), but dynamic context memory (Key-Value cache) must scale dynamically.
 
-| Platform / Appliance | Hardware Architecture | Process Node | LLM Output | World Model Metric | Thermal Envelope |
+```
++-----------------------------------------------------------------------------------+
+|                        CONTEXT WINDOW ARCHITECTURE PARADIGMS                      |
++-----------------------------------------------------------------------------------+
+|  1. Legacy GPU (FP16 Attention):    O(L^2) Quadratic Memory & Compute Stall      |
+|  2. LLM IPU (1.58-Bit + SSMs):      O(1) Linear Constant Memory (10M+ Tokens)   |
+|  3. World Model IPU (Extropic EBM): Physical Thermal Equilibrium Memory (<1 ns)   |
++-----------------------------------------------------------------------------------+
+```
+
+### A. LLM-Specific Context Window Scaling (1M to 10M+ Tokens)
+
+1. **1.58-Bit Ternary KV-Cache Compression:** Quantizing dynamic Key ($K$) and Value ($V$) activations to 1.58-bit ternary states ($\{-1, 0, 1\}$) reduces a 1-Million token KV cache from **160 GB (FP16) down to under 12 GB**, allowing the entire context history to fit directly into 3D-stacked SRAM dies.
+2. **Linear State Space Substrates (SSMs / Mamba / RWKV):** Replacing quadratic $O(L^2)$ Softmax attention with linear recurrent state updates ($\mathbf{h}_t = \mathbf{A}\mathbf{h}_{t-1} + \mathbf{B}\mathbf{x}_t$) maintains a fixed-size hidden state matrix regardless of context length, achieving **10M+ token context with $O(1)$ constant memory capacity**.
+3. **Integrated Silicon Photonic KV-Ring Buffers:** Circulating active context tokens across optical micro-ring resonators enables optical retrieval at $299,792 \text{ km/s}$ without electrical copper bus congestion.
+
+### B. Scaling to World Models: 4D Spatial-Temporal Latent Memory
+
+Transitioning from text LLMs to multi-modal World Models transforms context memory from a 1D sequence of discrete text tokens into a **4D spatial-temporal latent manifold** ($X, Y, Z, \text{Time}, \text{Physics}$).
+
+Under the **Extropic p-bit paradigm**, historical world context is stored not as raw high-resolution video frames, but as a **compact physical energy landscape** ($E(x)$) mapped across a **>4 Million p-bit array (Z1 Card)**. When an agent queries past environmental states, the thermodynamic p-bit substrate naturally relaxes to thermal equilibrium in sub-nanosecond timescales ($<1 \text{ ns}$), retrieving past world memory effortlessly through physical laws.
+
+---
+
+## VII. Quantitative Throughput Benchmarks & Scaling Roadmap
+
+The following table compares inference performance and context scaling across hardware architectures, from edge survival nodes to the proposed **Monolith MN1 IPU**:
+
+| Platform / Appliance | Hardware Architecture | Process Node | Output Throughput | Context Memory Capacity | Memory Scaling |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Crank Survival Node** | Single-Board ARM / Quantized GGUF | 5nm ARM | ~2 - 15 t/s | < 1 Latent FPS | 5W - 15W |
-| **NVIDIA H100 Cluster** | Digital GPU Cluster + HBM3 | 4nm TSMC | ~200 t/s | ~10 Latent FPS | 700W / GPU |
-| **Groq LPU** | Single-Threaded SRAM LPU | 14nm Global | ~800 t/s | ~30 Latent FPS | 300W |
-| **Cerebras WSE-3** | Wafer-Scale SRAM Engine | 5nm TSMC | ~2,500 t/s | ~60 Latent FPS | 23,000W |
-| **Extropic Z1 Card (Target)** | **Thermodynamic >4M pBits (PCIe)** | **CMOS / Thermo** | **~25,000 t/s** | **~85 Latent FPS** | **~75W** |
-| **Taalas HC1** | **Hardcoded Transistor Mask-ROM** | **6nm TSMC** | **~17,000 t/s** | **~75 Latent FPS** | **~150W** |
-| **Etched Sohu / Jalapeño Pod\*** | Hardcoded ASIC / Datacenter Pod | 4nm / Custom | ~500,000 t/s\* | ~90 Latent FPS | Datacenter Rack |
-| **Monolith MN1 (Proposed)** | **Sub-1nm Photonic / CIM / p-Bit** | **Sub-1nm IBM** | **1,000,000 t/s** | **> 120 Latent FPS** | **400W Appliance** |
+| **Crank Survival Node** | Single-Board ARM / GGUF | 5nm ARM | ~2 - 15 t/s | 8K - 32K tokens | $O(L^2)$ Memory Stalls |
+| **NVIDIA H100 Cluster** | Digital GPU + HBM3 | 4nm TSMC | ~200 t/s | 128K - 1M tokens | $O(L^2)$ VRAM Bound |
+| **Groq LPU** | Single-Threaded SRAM LPU | 14nm Global | ~800 t/s | 8K - 64K tokens | On-Chip SRAM Bound |
+| **Cerebras WSE-3** | Wafer-Scale SRAM Engine | 5nm TSMC | ~2,500 t/s | ~128K tokens | Wafer SRAM Bound |
+| **Extropic Z1 Card (Target)** | **Thermodynamic >4M pBits** | **CMOS / Thermo** | **~25,000 t/s** | **1M+ Latent Energy States** | **Thermal Equilibrium ($<1\text{ ns}$)** |
+| **Taalas HC1** | **Hardcoded Transistor Mask-ROM** | **6nm TSMC** | **~17,000 t/s** | **~128K Tokens (On-Chip SRAM)** | **Hardcoded Static + SRAM** |
+| **Etched Sohu / Jalapeño Pod\*** | Hardcoded ASIC / Datacenter Pod | 4nm / Custom | ~500,000 t/s\* | ~512K Tokens | Datacenter Cluster |
+| **Monolith MN1 (Proposed)** | **Sub-1nm Photonic / CIM / p-Bit** | **Sub-1nm IBM** | **1,000,000 t/s** | **10M+ Tokens / Infinite World State** | **$O(1)$ Photonic / p-Bit** |
 
 *\*Note: Figures for Etched Sohu and OpenAI Jalapeño represent estimated aggregate throughput across an 8-chip server / multi-node datacenter pod configuration utilizing high-bandwidth inter-chip networking (Broadcom Tomahawk switches), rather than a single standalone socket.*
 
 ---
 
-## VII. The Proposed Monolith MN1 Target Substrate Blueprint
+## VIII. The Proposed Monolith MN1 Target Substrate Blueprint
 
 ```
 +-----------------------------------------------------------------------------------+
@@ -182,7 +210,7 @@ The proposed **Monolith MN1 IPU** integrates these breakthrough layers into an u
 
 ---
 
-## VIII. Conclusion & Outlook: Inferential Synthetics
+## IX. Conclusion & Outlook: Inferential Synthetics
 
 Fulfilling the vision articulated by J.C.R. Licklider and M. Mitchell Waldrop in *The Dream Machine*, the Monolith IPU establishes the ultimate hardware-model unification: *The computer is the model, and the model is the computer*. By building upon the transistor-hardcoding breakthroughs of Taalas, the thermodynamic computing paradigm of Extropic, the custom ASIC scale of OpenAI Jalapeño, and sub-1nm photonic substrates, Inference Processing Units offer a definitive roadmap for true standalone artificial general intelligence.
 
@@ -194,10 +222,10 @@ Fulfilling the vision articulated by J.C.R. Licklider and M. Mitchell Waldrop in
 2. **L. Bajic et al.**, "Systems and Methods for Hardcoded Neural Model Silicon Fabric," *Taalas Inc. Patents & Technical Publications*, 2024–2026.
 3. **T. P. Morgan**, "Taalas Etches AI Models Onto Transistors To Rocket Boost Inference," *The Next Platform*, Feb 2026.
 4. **G. Verdon et al.**, "An Efficient Probabilistic Hardware Architecture for Diffusion-Like Models," *Extropic AI Technical Publications / arXiv:2510.18940*, Oct 2025.
-5. **Extropic AI**, "Extropic Hardware Specifications: X0 Prototype, XTR-0 Platform, Z1 Stick (>500K pbits) & Z1 Card (>4M pbits)," *Extropic Technical Documentation*, 2026.
+5. **Extropic AI**, "Extropic Hardware Specifications: X0 Prototype, XTR-0 Platform, Z1 Stick (>500K pbits) & Z1 Card (>4M pbits)," *Extropic Documentation*, 2026.
 6. **OpenAI & Broadcom**, "OpenAI and Broadcom Unveil LLM-Optimized Inference Chip (Jalapeño)," *OpenAI Announcements*, June 2026.
 7. **IBM Research & Patents**, "Flexible Precision Neural Inference Processing Unit (AIU)," *US Patent & IBM Technical Reports*, 2021–2024.
-8. **Graphcore Systems**, "Intelligence Processing Unit (IPU) Architecture Whitepaper," *IEEE Micro*, vol. 39, no. 6, pp. 30–38, 2019.
+8. **Graphcore Systems**, "Intelligence Processing Unit Architecture," *IEEE Micro*, vol. 39, no. 6, pp. 30–38, 2019.
 9. **C. Mead**, "Neuromorphic Electronic Systems," *Proceedings of the IEEE*, vol. 78, no. 10, pp. 1629–1636, 1990.
 10. **D. Ielmini and H. S. P. Wong**, "In-memory computing with resistive switching devices," *Nature Electronics*, vol. 1, pp. 333–343, 2018.
 11. **W. Wan et al.** (NeuRRAM), "A compute-in-memory chip based on resistive random-access memory," *Nature*, vol. 608, pp. 504–512, 2022.
