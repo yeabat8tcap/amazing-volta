@@ -11,9 +11,10 @@ The fundamental limit of modern artificial intelligence is no longer algorithmic
 
 This paper presents the comprehensive architectural foundation for standalone multi-modality **Inference Processing Units (IPUs)**—dedicated, self-contained physical hardware appliances engineered exclusively for continuous, real-time World Model simulation. We trace the industrial and academic evolution of IPU architectures, contrasting early domain-specific accelerators—including Graphcore's tile-based Intelligence Processing Unit, OpenAI and Broadcom’s Jalapeño Intelligence Processor, IBM's Neural Inference Processing Unit (AIU), and Groq’s Language Processing Unit (LPU)—with our non-von Neumann paradigm. 
 
-Crucially, we synthesize two radical hardware breakthroughs:
+Crucially, we synthesize two radical hardware breakthroughs and introduce a new physical state primitive:
 1. The **"Model-as-Chip" silicon etching paradigm pioneered by Taalas (Ljubisa Bajic et al., 2024–2026)**, whose HC1 chip hard-codes neural network parameters directly into a transistor mask-ROM "recall fabric" to achieve over 17,000 tokens per second for Llama 3.1 8B on 6nm silicon.
 2. The **Thermodynamic Probabilistic Computing architecture pioneered by Extropic (Guillaume Verdon et al., 2024–2026)**, whose X0/XTR-0 prototypes and upcoming **Z1 Stick (>500,000 pbits)** and **Z1 Card (>4,000,000 pbits)** harness natural ambient transistor thermal fluctuations to perform zero-power Boltzmann random sampling and Denoising Thermodynamic Model (DTM) latent generation at 10,000x lower energy than GPUs.
+3. The **Neurobit ($\eta$-Bit) Primitive**: A unified physical cell merging hardcoded static parameter weights ($W_{ij}, b_i$), thermodynamic p-bit thermal fluctuations ($\xi_t(T)$), and dynamic photonic activations into a single **Zero-Fetch** substrate element.
 
 We extend this foundation to formalize **The Hardware-Model Duality ("The Flippening")**: *The computer is no longer running the model; the computer IS the model, and the model IS the computer*. Echoing M. Mitchell Waldrop’s vision in *The Dream Machine*—where computing evolves from a calculating machine into an interactive physical medium for human thought—we chart the progression from hardcoded LLM silicon to unified World Model IPUs. 
 
@@ -114,7 +115,52 @@ When mapped onto Extropic's **Z1 Card (>4 Million pbits)** and combined with sub
 
 ---
 
-## V. Mathematical & Physical Derivations
+## V. Redefining Memory: The Neurobit ($\eta$-Bit) Primitive & Physical Memory Taxonomy
+
+In classical digital architecture, memory is defined as a passive storage warehouse (DRAM / HBM / SRAM) where binary data sits idly waiting to be fetched across a copper bus into an ALU/GPU register file. In a pure Inference Processing Unit (IPU) substrate, memory cannot be a passive warehouse. We establish:
+
+> **The First Axiom of Inference Computing:**  
+> *Memory is not a place where data goes to rest; memory IS the active physical computational manifold.*
+
+```
++-----------------------------------------------------------------------------------+
+|                        THE NEUROBIT (η-BIT) UNIFIED CELL                          |
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|    η_ij  =  [ W_ij ]       +       [ β_ij * ξ_t(T) ]       +       [ a_ij(t) ]    |
+|             (Static Weight)         (p-Bit Thermal Noise)         (Dynamic KV State)|
+|                                                                                   |
+|  - Conductance State        - Stochastic MTJ Fluctuations    - Charge/Photonic Amp |
+|  - Mask-ROM Transistor      - Energy Barrier Height          - On-Chip SRAM Cell   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
+### A. Mathematical Formalization of the Neurobit ($\eta$-Bit)
+We introduce the **Neurobit ($\eta$-Bit)** as the unified physical atomic primitive of an IPU substrate. A single Neurobit $\eta_{ij}$ merges static weights ($W_{ij}$), thermodynamic thermal noise ($\xi_t(T)$), and dynamic activations ($v_j(t)$) into a single physical cell:
+
+$$\eta_{ij}(t) = f_{\text{analog}}\left( W_{ij} \cdot v_j(t) + b_i + \beta_{ij} \xi_t(T) \right)$$
+
+Where $W_{ij}$ is the hardcoded physical conductance (Taalas mask-ROM), $\xi_t(T)$ is the ambient thermodynamic noise (Extropic p-bit), $\beta_{ij}$ is the programmable energy barrier height, and $v_j(t)$ is the incoming photonic/voltage signal.
+
+### B. The 3-Tier Physical Memory Taxonomy of an IPU Substrate
+
+1. **Tier 1: Conductance Memory (Hardcoded Parameter Fabric):** Immutable parameter topology ($W, b$) etched into mask-ROM transistors or RRAM crossbars ($O(1)$ zero-fetch energy).
+2. **Tier 2: Thermodynamic Energy Memory (Neurobit / p-Bit Thermal Fabric):** Dynamic probability distributions and latent energy landscapes ($E(x)$) evaluated via physical thermal relaxation ($<1\text{ ns}$).
+3. **Tier 3: Photonic Wave Memory (Inter-Core Context Buffer):** Continuous spatial-temporal context circulating as optical wave packets across silicon waveguides at light speed ($299,792 \text{ km/s}$).
+
+### C. The Principle of Zero-Fetch Intelligence
+By replacing discrete HBM/DRAM chips with **Neurobits ($\eta$-bits)**, an IPU substrate achieves **Zero-Fetch Intelligence**:
+
+$$\text{Legacy GPU Power: } 80\% \text{ Memory Fetch Bus } + 20\% \text{ ALU Compute}$$
+
+$$\text{Neurobit IPU Power: } 0\% \text{ Memory Fetch Bus } + 100\% \text{ Physical State Relaxation}$$
+
+Memory is never "fetched" across an external bus; the physical substrate simply relaxes into a physical energy minimum that *is* the inferred solution.
+
+---
+
+## VI. Mathematical & Physical Derivations
 
 To mathematically demonstrate why legacy GPU architectures fail and how non-von Neumann IPUs achieve 1,000,000 tok/s equivalent throughput, we formalize five core derivations:
 
@@ -145,7 +191,7 @@ $$\mathbf{O} = \text{Softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d_k}}\rig
 
 ---
 
-## VI. Scaling Context Windows: From 10M+ Token LLMs to Infinite Spatial-Temporal World Memory
+## VII. Scaling Context Windows: From 10M+ Token LLMs to Infinite Spatial-Temporal World Memory
 
 While **generation throughput** ($\sim 1,000,000 \text{ tokens/sec}$) defines the output speed of an IPU, the **context window size ($L$)** dictates its active working memory capacity. In hardcoded silicon architectures, static weights are burned into metal layers ($O(1)$ fetch energy), but dynamic context memory (Key-Value cache) must scale dynamically.
 
@@ -173,26 +219,26 @@ Under the **Extropic p-bit paradigm**, historical world context is stored not as
 
 ---
 
-## VII. Quantitative Throughput Benchmarks & Scaling Roadmap
+## VIII. Quantitative Throughput & Context Benchmarks
 
-The following table compares inference performance and context scaling across hardware architectures, from edge survival nodes to the proposed **Monolith MN1 IPU**:
+The following table compares inference performance, memory primitives, and context scaling across hardware architectures, from edge survival nodes to the proposed **Monolith MN1 IPU**:
 
-| Platform / Appliance | Hardware Architecture | Process Node | Output Throughput | Context Memory Capacity | Memory Scaling |
+| Platform / Appliance | Hardware Architecture | Memory Primitive | Output Throughput | Context Capacity | Memory Scaling |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Crank Survival Node** | Single-Board ARM / GGUF | 5nm ARM | ~2 - 15 t/s | 8K - 32K tokens | $O(L^2)$ Memory Stalls |
-| **NVIDIA H100 Cluster** | Digital GPU + HBM3 | 4nm TSMC | ~200 t/s | 128K - 1M tokens | $O(L^2)$ VRAM Bound |
-| **Groq LPU** | Single-Threaded SRAM LPU | 14nm Global | ~800 t/s | 8K - 64K tokens | On-Chip SRAM Bound |
-| **Cerebras WSE-3** | Wafer-Scale SRAM Engine | 5nm TSMC | ~2,500 t/s | ~128K tokens | Wafer SRAM Bound |
-| **Extropic Z1 Card (Target)** | **Thermodynamic >4M pBits** | **CMOS / Thermo** | **~25,000 t/s** | **1M+ Latent Energy States** | **Thermal Equilibrium ($<1\text{ ns}$)** |
-| **Taalas HC1** | **Hardcoded Transistor Mask-ROM** | **6nm TSMC** | **~17,000 t/s** | **~128K Tokens (On-Chip SRAM)** | **Hardcoded Static + SRAM** |
-| **Etched Sohu / Jalapeño Pod\*** | Hardcoded ASIC / Datacenter Pod | 4nm / Custom | ~500,000 t/s\* | ~512K Tokens | Datacenter Cluster |
-| **Monolith MN1 (Proposed)** | **Sub-1nm Photonic / CIM / p-Bit** | **Sub-1nm IBM** | **1,000,000 t/s** | **10M+ Tokens / Infinite World State** | **$O(1)$ Photonic / p-Bit** |
+| **Crank Survival Node** | Single-Board ARM / GGUF | DRAM / SRAM | ~2 - 15 t/s | 8K - 32K tokens | $O(L^2)$ Memory Stall |
+| **NVIDIA H100 Cluster** | Digital GPU + HBM3 | Passive HBM3 | ~200 t/s | 128K - 1M tokens | $O(L^2)$ VRAM Bound |
+| **Groq LPU** | Single-Threaded SRAM LPU | On-Chip SRAM | ~800 t/s | 8K - 64K tokens | On-Chip SRAM Bound |
+| **Cerebras WSE-3** | Wafer-Scale SRAM Engine | Wafer SRAM | ~2,500 t/s | ~128K tokens | Wafer SRAM Bound |
+| **Extropic Z1 Card** | **Thermodynamic >4M pBits** | **p-Bit Thermal ($E(x)$)** | **~25,000 t/s** | **1M+ Latent States** | **Thermal Eq ($<1\text{ ns}$)** |
+| **Taalas HC1** | **Hardcoded Transistor Mask-ROM** | **Mask-ROM Recall** | **~17,000 t/s** | **~128K (SRAM)** | **Static + On-Chip SRAM** |
+| **Etched Sohu / Jalapeño Pod\*** | Hardcoded ASIC / Datacenter Pod | Custom ASIC | ~500,000 t/s\* | ~512K Tokens | Datacenter Pod Cluster |
+| **Monolith MN1 (Proposed)** | **Sub-1nm Photonic / p-Bit** | **Neurobit ($\eta$-Bit)** | **1,000,000 t/s** | **10M+ / Infinite World** | **Zero-Fetch ($O(1)$)** |
 
 *\*Note: Figures for Etched Sohu and OpenAI Jalapeño represent estimated aggregate throughput across an 8-chip server / multi-node datacenter pod configuration utilizing high-bandwidth inter-chip networking (Broadcom Tomahawk switches), rather than a single standalone socket.*
 
 ---
 
-## VIII. The Proposed Monolith MN1 Target Substrate Blueprint
+## IX. The Proposed Monolith MN1 Target Substrate Blueprint
 
 ```
 +-----------------------------------------------------------------------------------+
@@ -201,18 +247,18 @@ The following table compares inference performance and context scaling across ha
 |  [ Layer 1: Direct-to-Chip Micro-Fluidic Liquid Cooling Manifold ]                |
 |  [ Layer 2: Sub-1nm Silicon Photonics I/O Waveguides (299,792 km/s) ]              |
 |  [ Layer 3: 1.58-Bit Ternary World Model Mask-ROM & RRAM CIM Crossbar ]          |
-|  [ Layer 4: Extropic Thermodynamic p-Bit Sampling Fabric (>4M pBits) ]            |
+|  [ Layer 4: Neurobit (η-Bit) Unified Parameter & Thermodynamic p-Bit Fabric ]     |
 |  [ Layer 5: High-Density CoWoS Interposer & Localized KV-Cache SRAM ]             |
 +-----------------------------------------------------------------------------------+
 ```
 
-The proposed **Monolith MN1 IPU** integrates these breakthrough layers into an un-tethered, standalone 400W physical appliance. By combining Taalas hardcoded parameter silicon, Extropic thermodynamic p-bit sampling, and IBM sub-1nm photonics, the MN1 acts as a continuous physical simulation appliance—enabling real-time autonomous robotics, spatial computing, and off-grid intelligence without cloud connectivity.
+The proposed **Monolith MN1 IPU** integrates these breakthrough layers into an un-tethered, standalone 400W physical appliance. By combining Taalas hardcoded parameter silicon, Extropic thermodynamic p-bit sampling, Neurobit ($\eta$-bit) zero-fetch memory cells, and IBM sub-1nm photonics, the MN1 acts as a continuous physical simulation appliance—enabling real-time autonomous robotics, spatial computing, and off-grid intelligence without cloud connectivity.
 
 ---
 
-## IX. Conclusion & Outlook: Inferential Synthetics
+## X. Conclusion & Outlook: Inferential Synthetics
 
-Fulfilling the vision articulated by J.C.R. Licklider and M. Mitchell Waldrop in *The Dream Machine*, the Monolith IPU establishes the ultimate hardware-model unification: *The computer is the model, and the model is the computer*. By building upon the transistor-hardcoding breakthroughs of Taalas, the thermodynamic computing paradigm of Extropic, the custom ASIC scale of OpenAI Jalapeño, and sub-1nm photonic substrates, Inference Processing Units offer a definitive roadmap for true standalone artificial general intelligence.
+Fulfilling the vision articulated by J.C.R. Licklider and M. Mitchell Waldrop in *The Dream Machine*, the Monolith IPU establishes the ultimate hardware-model unification: *The computer is the model, and the model is the computer*. By building upon the transistor-hardcoding breakthroughs of Taalas, the thermodynamic computing paradigm of Extropic, the Neurobit ($\eta$-bit) zero-fetch memory cell, OpenAI Jalapeño, and sub-1nm photonic substrates, Inference Processing Units offer a definitive roadmap for true standalone artificial general intelligence.
 
 ---
 
