@@ -7,7 +7,7 @@
 
 ## Abstract
 
-The fundamental limit of modern artificial intelligence is no longer algorithmic—it is structural. Governed by classical von Neumann architecture, legacy Graphics Processing Units (GPUs) expend over 80% of their total power envelope shuttling weight matrices across high-bandwidth memory (HBM) buses, PCIe channels, and multi-level cache hierarchies. While this digital paradigm supported the initial wave of text-centric Large Language Models (LLMs), the transition toward continuous, spatial-temporal **World Models** demands an order-of-magnitude leap in energy efficiency and latency. 
+The fundamental limit of modern **Capital Superintelligence** is no longer algorithmic—it is structural. Governed by classical von Neumann architecture, legacy Graphics Processing Units (GPUs) expend over 80% of their total power envelope shuttling weight matrices across high-bandwidth memory (HBM) buses, PCIe channels, and multi-level cache hierarchies. While this digital paradigm supported the initial wave of text-centric Large Language Models (LLMs), the transition toward continuous, spatial-temporal **World Models** demands an order-of-magnitude leap in energy efficiency and latency. 
 
 This paper presents the comprehensive architectural foundation for standalone multi-modality **Inference Processing Units (IPUs)**—dedicated, self-contained physical hardware appliances engineered exclusively for continuous, real-time World Model simulation. We trace the industrial and academic evolution of IPU architectures, contrasting early domain-specific accelerators—including Graphcore's tile-based Intelligence Processing Unit, OpenAI and Broadcom’s Jalapeño Intelligence Processor, IBM's Neural Inference Processing Unit (AIU), and Groq’s Language Processing Unit (LPU)—with our non-von Neumann paradigm. 
 
@@ -29,7 +29,7 @@ Grounded in foundational neuromorphic physics (Mead, 1990; Ielmini & Wong, 2018)
 
 For over seven decades, digital computing has operated on the von Neumann paradigm: a clear separation between a central processing unit (CPU/GPU) and memory storage. In deep learning inference, this separation introduces the catastrophic **"Memory Wall."** For every forward pass of an artificial neural network, billions or trillions of floating-point parameters must be read from external High Bandwidth Memory (HBM) and transferred across copper traces into register files. In memory-bound auto-regressive decoding, over 80% of consumed electrical energy is wasted on parasitic interconnect capacitance rather than arithmetic computation.
 
-While cloud datacenters have temporarily masked this inefficiency by scaling gigawatt power grids and multi-thousand GPU clusters, this brute-force approach is unviable for edge intelligence, off-grid robotics, and continuous spatial simulation. Furthermore, artificial intelligence is undergoing a fundamental shift: from discrete, step-by-step text token generation (LLMs) to continuous, spatial-temporal visual and physical environment simulation (**World Models**).
+While cloud datacenters have temporarily masked this inefficiency by scaling gigawatt power grids and multi-thousand GPU clusters, this brute-force approach is unviable for edge intelligence, off-grid robotics, and continuous spatial simulation. Furthermore, **Capital Superintelligence** is undergoing a fundamental shift: from discrete, step-by-step text token generation (LLMs) to continuous, spatial-temporal visual and physical environment simulation (**World Models**).
 
 World Models require physical environments, lighting, object physics, and multi-modal sensory inputs to be updated asynchronously and continuously in real time. To support this computational burden without megawatt infrastructure, we establish **The Hardware-Model Duality ("The Flippening")**:
 
@@ -258,7 +258,7 @@ The proposed **Monolith MN1 IPU** integrates these breakthrough layers into an u
 
 ## X. Conclusion & Outlook: Inferential Synthetics
 
-Fulfilling the vision articulated by J.C.R. Licklider and M. Mitchell Waldrop in *The Dream Machine*, the Monolith IPU establishes the ultimate hardware-model unification: *The computer is the model, and the model is the computer*. By building upon the transistor-hardcoding breakthroughs of Taalas, the thermodynamic computing paradigm of Extropic, the Neurobit ($\eta$-bit) zero-fetch memory cell, OpenAI Jalapeño, and sub-1nm photonic substrates, Inference Processing Units offer a definitive roadmap for true standalone artificial general intelligence.
+Fulfilling the vision articulated by J.C.R. Licklider and M. Mitchell Waldrop in *The Dream Machine*, the Monolith IPU establishes the ultimate hardware-model unification: *The computer is the model, and the model is the computer*. By building upon the transistor-hardcoding breakthroughs of Taalas, the thermodynamic computing paradigm of Extropic, the Neurobit ($\eta$-bit) zero-fetch memory cell, OpenAI Jalapeño, and sub-1nm photonic substrates, Inference Processing Units offer a definitive roadmap for true standalone **Capital Superintelligence**.
 
 ---
 
